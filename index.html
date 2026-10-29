@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Тест по математике</title><style>
+:root{--ink:#1e3a8a;--pen:#c0392b;--ok:#15803d;--line:#d6e0ee}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.5 system-ui,sans-serif;color:#18233a;background:#fbfcfe linear-gradient(var(--line) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/24px 24px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+main{max-width:640px;margin:0 auto;padding:18px}
+.card{background:#fff;border:2px solid var(--ink);border-radius:4px;padding:20px;margin-bottom:16px}
+h2,h3{margin:0 0 8px;color:var(--ink)}
+.q{font:24px/1.4 Georgia,serif;margin:16px 0}
+input,button,textarea{font:inherit;width:100%;padding:11px 12px;margin:6px 0;border-radius:4px;border:2px solid var(--ink);user-select:text;-webkit-user-select:text}
+button{background:var(--ink);color:#fff;cursor:pointer}button.g{background:#fff;color:var(--ink)}
+input:focus,button:focus-visible{outline:3px solid #f59e0b}
+.bar{height:8px;border:1px solid var(--ink)}.bar i{display:block;height:100%;background:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}
+.m{color:#5b6b85;font-size:14px}.ok{color:var(--ok)}.bad{color:var(--pen)}
+body.away main{filter:blur(16px)}
+@media print{body{display:none}}
+</style></head><body><main id="app"></main><script>
+const $=s=>document.querySelector(s),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=a=>a[R(0,a.length-1)],
+sg=a=>a<0?'− '+-a:'+ '+a,sp=n=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[n],sh=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+// Генераторы задач: каждый возвращает [тема, условие, ответ]. Числа случайны, поэтому у каждого ученика свой вариант.
+const G={
+1:[()=>{let k=R(2,5),q=P([2,3]),p=R(1,3);return['Степени',`Вычислите: ${k**q}^(${p}/${q})`,k**p]},
+()=>{let b=R(2,5),n=R(2,4);return['Логарифмы',`Решите уравнение: log_${b}(x) = ${n}. Найдите x`,b**n]},
+()=>{let n=R(3,5),a=R(1,6)*P([-1,1]),x=R(1,3);return['Производная',`Найдите f'(${x}), если f(x) = x${sp(n)} ${sg(a)}x + 5`,n*x**(n-1)+a]},
+()=>{let[t,u,h]=P([[3,4,5],[5,12,13],[6,8,10],[8,15,17]]);return['Векторы',`Найдите длину вектора a = (${t}; ${-u})`,h]},
+()=>{let k=R(1,5);return['Вероятность',`Игральный кубик бросают один раз. Какова вероятность выпадения числа больше ${k}?`,(6-k)/6]},
+()=>{let b=R(2,4);return['Интегралы',`Вычислите определённый интеграл от 3x² на отрезке [0; ${b}]`,b**3]},
+()=>{let[s,v]=P([['cos(2π/3)',-.5],['sin(5π/6)',.5],['cos(π/3)',.5],['tg(3π/4)',-1],['sin(3π/2)',-1],['cos π',-1],['sin(7π/6)',-.5]]);return['Тригонометрия',`Вычислите: ${s}`,v]}],
+2:[()=>{let p=R(1,4),q=R(1,5),s=R(1,4);return['Производная',`Найдите f'(0), если f(x) = ${p}eˣ + ${q}sin x + ${s}cos x`,p+q]},
+()=>{let b=R(2,4),n=R(2,3),c=R(1,6);return['Логарифмы',`Решите уравнение: log_${b}(x − ${c}) = ${n}`,b**n+c]},
+()=>{let m=R(1,3);return['Производная',`Найдите f'(e^${m}), если f(x) = x·ln x`,m+1]},
+()=>{let a=R(2,9);return['Пределы',`Вычислите предел при x→${a}: (x² − ${a*a})/(x − ${a})`,2*a]},
+()=>{let c=R(1,4),[x,y,r]=P([[`(${c}; 0)`,`(${c}; ${c})`,45],[`(0; ${c})`,`(−${c}; ${c})`,135],[`(${c}; 0)`,`(0; ${c+1})`,90],[`(${c}; ${c})`,`(−${c}; −${c})`,180]]);return['Векторы',`Найдите угол (в градусах) между векторами a = ${x} и b = ${y}`,r]},
+()=>{let p=R(2,8),q=R(1,9);return['Экстремумы',R(0,1)?`Найдите точку максимума функции f(x) = −x² + ${2*p}x − ${q}`:`Найдите точку минимума функции f(x) = x² − ${2*p}x + ${q}`,p]},
+()=>{let a=R(-5,5),d=R(2,6),n=R(8,15);return['Прогрессии',`Арифметическая прогрессия: a₁ = ${a}, d = ${d}. Найдите a_${n}`,a+(n-1)*d]}],
+3:[()=>{let m=R(2,5),a=P([2,4,6,8]),x=R(1,4),b=m*m-a*x;return['Производная',`Найдите f'(${x}), если f(x) = √(${a}x${b?' '+sg(b):''})`,a/(2*m)]},
+()=>{let[t,n]=P([['sin x = 0,5 на [0; π]',2],['sin x = −0,5 на [0; 2π]',2],['cos x = 0 на [0; 2π]',2],['sin x = 0 на [0; 2π]',3],['cos x = 1 на [0; 4π]',3],['sin x = 1 на [0; 2π]',1]]);return['Тригонометрия',`Сколько корней имеет уравнение ${t}?`,n]},
+()=>{let a=R(2,9),b=R(1,9),c=R(2,5),d=R(1,9);return['Пределы',`Вычислите предел при x→∞: (${a}x² − ${b}x)/(${c}x² + ${d})`,a/c]},
+()=>{let a=R(1,5)*P([-1,1]),x=R(1,3);return['Касательная',`Найдите угловой коэффициент касательной к графику y = x³ ${sg(a)}x в точке с абсциссой x = ${x}`,3*x*x+a]},
+()=>{let a=R(2,4),o=R(0,1);return['Интегралы',o?`Вычислите интеграл от (x³ + x) на отрезке [−${a}; ${a}]`:`Вычислите интеграл от (x² + x³) на отрезке [−${a}; ${a}]`,o?0:2*a**3/3]},
+()=>{let b=P([2,3]);return['Экстремумы',`Найдите наибольшее значение функции f(x) = x³ − 3x на отрезке [0; ${b}]`,b**3-3*b]},
+()=>{let n=R(2,4);return['Логарифмы',`Сколько целых решений имеет неравенство ${P([`log_0,5(x) > −${n}`,`log_2(x) < ${n}`])}?`,2**n-1]}],
+4:[()=>{let a=R(1,3),b=R(1,3);return['Интегралы',`Вычислите интеграл от |x| на отрезке [−${a}; ${b}]`,(a*a+b*b)/2]},
+()=>{let k=R(2,9),m=R(2,5);return['Пределы',`Вычислите предел при x→0: sin(${k}x)/(${m}x)`,k/m]},
+()=>{let n=R(1,3),s=new Set;while(s.size<n)s.add(R(-3,4));return['Производная',`Сколько точек, в которых функция не имеет производной, у графика f(x) = ${[...s].map(a=>a?`|x ${sg(-a)}|`:'|x|').join(' + ')} + ${R(1,5)}?`,n]},
+()=>{let n=R(3,4),s=P([1,-1]),r=new Set;while(r.size<n)r.add(R(-4,5));let v=s*(n%2?-1:1),c=0;for(let i=0;i<n;i++){if(v>0)c++;v=-v}return['Экстремумы',`Функция f определена на ℝ, f'(x) = ${s<0?'−':''}${[...r].sort((a,b)=>a-b).map(a=>a?`(x ${sg(-a)})`:'x').join('')}. Сколько у f точек локального максимума?`,c]},
+()=>{let x=R(1,5),k=R(1,4),p=2*x-k;return['Касательная',`К графику y = x² ${p?sg(-p)+'x':''} проведена касательная, параллельная прямой y = ${k}x + 1. Найдите абсциссу точки касания`,x]},
+()=>{let k=P([2,3,4,6]);return['Интегралы',`Найдите площадь фигуры, ограниченной параболой y = x² и прямой y = ${k}x`,k**3/6]}],
+5:[()=>{let k=R(1,3),m=R(1,3);return['Пределы',`Вычислите предел при x→0: (1 − cos ${k>1?k:''}x)/(${m>1?m:''}x²)`,k*k/(2*m)]},
+()=>{let k=P([4,9,16,25]);return['Экстремумы',`Найдите наименьшее значение функции y = x + ${k}/x при x > 0`,2*Math.sqrt(k)]},
+()=>{let a=R(1,4),b=R(1,3);return['Интегралы',`Пусть F(x) = интеграл от 0 до x² от (t + ${a}) dt. Найдите F'(${b})`,2*b*(b*b+a)]},
+()=>{let k=R(2,5),m=R(1,4);return['Прогрессии',`Сумма бесконечно убывающей геометрической прогрессии: b₁ = ${m*(k-1)}, q = 1/${k}. Найдите сумму`,m*k]}]};
+const fm=x=>{if(Number.isInteger(x))return''+x;for(let d=2;d<13;d++)if(Math.abs(x*d-Math.round(x*d))<1e-6)return Math.round(x*d)+'/'+d;return x.toFixed(2)},
+op=a=>{let s=new Set([a]);for(let x of sh([-a,a+1,a-1,2*a,a/2,a+2,a-2,a*a,1/a])){if(s.size>3)break;if(isFinite(x)&&Math.abs(x)<1e4&&Math.abs(x-a)>.05)s.add(+x.toFixed(4))}for(let k=3;s.size<4;k++)s.add(a+k);return sh([...s])};
+function make(L,n){let o=[],g=[],u=new Set,k=0;while(o.length<n&&k++<300){if(!g.length)g=sh(G[L]);let[t,q,a]=g.pop()();if(!u.has(q)){u.add(q);o.push({L,t,q,a,mc:Math.random()<.4?op(a):0})}}return o}
+const num=s=>{s=s.trim().replace(',','.').replace('−','-');if(s.includes('/')){let[x,y,z]=s.split('/');return z!==undefined||!x||!y?NaN:x/y}return s?+s:NaN};
+const agg=(a,k,s)=>{let o={};a.forEach(x=>{let r=o[x[k]]??={n:0,c:0,ms:0};r.n++;r.c+=x.ok;r.ms+=x.ms});return Object.entries(o).sort(s?(x,y)=>x[1].c/x[1].n-y[1].c/y[1].n:(x,y)=>x[0]<y[0]?-1:1)};
+const tb=(h,rows)=>`<table><tr><th>${h}<th>Верно<th>Время<th></tr>`+rows.map(([k,r])=>{let p=r.c/r.n;return`<tr><td>${k}<td>${r.c}/${r.n}<td>${(r.ms/r.n/1000).toFixed(1)} с<td class="${p>=.8?'ok':p<.5?'bad':''}">${p>=.8?'легко':p<.5?'не идёт':''}`}).join('')+'</table>';
+let S={},A=[],RES={};
+const view=h=>$('#app').innerHTML=h;
+function login(){view(`<div class=card><h2>Тест по математике</h2><p class=m>10–11 класс. Сначала 30 вопросов, потом закрепляющий тест из 10. Ответ — число: целое, десятичная дробь (0,5) или обыкновенная (1/3). Калькулятор и сторонние приложения не нужны.</p><input id=g placeholder="Группа: строчные буквы и цифры без пробелов" autocomplete=off><input id=n placeholder="Имя" autocomplete=off><input id=s placeholder="Фамилия" autocomplete=off><button onclick=start()>Начать тест</button><p id=e class=bad></p></div>`);$('#g').oninput=e=>e.target.value=e.target.value.toLowerCase().replace(/\s/g,'')}
+function start(){let g=$('#g').value,n=$('#n').value.trim(),s=$('#s').value.trim();if(!/^[a-zа-яё0-9]+$/.test(g)||!n||!s){$('#e').textContent='Заполните группу (строчные буквы и цифры, без пробелов), имя и фамилию.';return}
+S={group:g,name:n,surname:s,start:new Date().toISOString()};A=[];run('placement',[1,2,3,4,5].flatMap((L,i)=>make(L,[7,7,7,6,3][i])))}
+function run(t,qs){S.test=t;S.qs=qs;S.i=0;ask()}
+function ask(){let{qs,i}=S,q=qs[i];if(i>=qs.length)return over();view(`<div class=card><div class=bar><i style="width:${i/qs.length*100}%"></i></div><p class=m>${S.test=='placement'?'Первичный тест':'Закрепляющий тест'}: вопрос ${i+1} из ${qs.length}</p><div class=q>${q.q}</div>${q.mc?q.mc.map((x,j)=>`<button class=g onclick=send(0,${j})>${fm(x)}</button>`).join(''):'<input id=a autocomplete=off placeholder="Ответ"><button onclick=send()>Ответить</button>'}<button class=g onclick=send(1)>Не знаю</button></div>`);
+if(!q.mc){$('#a').focus();$('#a').onkeydown=e=>e.key=='Enter'&&send()}S.t=performance.now();S.b=0}
+function send(skip,j){let q=S.qs[S.i],x=q.mc?q.mc[j]:num($('#a')?.value||''),v=skip?'':q.mc?fm(x):$('#a').value.trim();if(!skip&&!q.mc&&!v)return;A.push({test:S.test,L:q.L,lv:'Уровень '+q.L,t:q.t,q:q.q,r:v,a:fm(q.a),ok:!skip&&Math.abs(x-q.a)<.006?1:0,ms:Math.round(performance.now()-S.t),bl:S.b});S.i++;ask()}
+function over(){if(S.test=='placement'){let by={},lv=1;for(let L=1;L<6;L++){let l=A.filter(x=>x.test=='placement'&&x.L==L);by[L]=[l.filter(x=>x.ok).length,l.length];if(by[L][0]/by[L][1]>=.5)lv=L}
+S.pl={level:lv,by};view(`<div class=card><h2>Первичный тест пройден</h2><p>Ваш примерный уровень: <b>${lv} из 5</b>.</p><p class=m>Теперь закрепляющий тест из 10 вопросов — он покажет, верно ли определён уровень.</p><button onclick="run('confirm',make(${lv},10))">Продолжить</button></div>`)}else finish()}
+const VR={confirmed:'подтверждён',under:'занижен',over:'завышен'};
+let TXT='';const FN=()=>`${S.group}_${S.surname}_${S.name}.txt`,msg=t=>$('#r').textContent=t;
+function finish(){let L=S.pl.level,k=A.filter(x=>x.test=='confirm'&&x.ok).length,v=k>=9&&L<5?'under':k<=5&&L>1?'over':'confirmed',f=L+(v=='under')-(v=='over');
+TXT=['ТЕСТ ПО МАТЕМАТИКЕ','Группа: '+S.group,'Фамилия: '+S.surname,'Имя: '+S.name,'Дата: '+new Date().toLocaleString('ru'),'Первичный уровень: '+L,`Закрепление: ${k}/10, ${VR[v]}`,'Итоговый уровень: '+f,'',['№','Тест','Уровень','Тема','Верно','Секунд','Вне окна','Задача','Ответ ученика','Правильный ответ'].join('\t'),...A.map((x,i)=>[i+1,x.test=='placement'?'первичный':'закрепление',x.L,x.t,x.ok?'да':'нет',(x.ms/1000).toFixed(1),x.bl,x.q,x.r.replace(/\s+/g,' '),x.a].join('\t'))].join('\n');
+view(`<div class=card><h2>Готово, ${S.name}!</h2><p>Первичный уровень: <b>${L}</b>. Закрепляющий тест: <b>${k}/10</b>. Уровень ${{confirmed:'подтверждён',under:'занижен — вы справились лучше',over:'завышен — стоит повторить уровень ниже'}[v]}. Итоговый уровень: <b>${f}</b>.</p><p><b>Отправьте результат преподавателю в группу:</b></p><button onclick=sendF()>Отправить в группу</button><button class=g onclick=dl()>Скачать файл</button><button class=g onclick=cp()>Скопировать текст</button><p id=r class=m>Файл: ${FN()}</p><textarea rows=4 readonly>${TXT.replace(/</g,'&lt;')}</textarea></div><div class=card><h3>По темам (сложные — сверху)</h3>${tb('Тема',agg(A,'t',1))}</div><div class=card><h3>По уровням</h3>${tb('Уровень',agg(A,'lv'))}</div>`)}
+async function sendF(){if(window.Android)return Android.share(FN(),TXT);try{await navigator.share({files:[new File([TXT],FN(),{type:'text/plain'})]})}catch(e){msg('Меню «Поделиться» недоступно. Нажмите «Скачать файл» или «Скопировать текст».')}}
+function dl(){if(window.Android)return Android.share(FN(),TXT);let a=document.createElement('a');a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(TXT);a.download=FN();a.click();msg('Файл: '+FN())}
+async function cp(){try{await navigator.clipboard.writeText(TXT);msg('Скопировано. Вставьте текст в чат группы.')}catch(e){document.querySelector('textarea').select();msg('Текст выделен — нажмите «Копировать» в меню телефона.')}}
+// Ограничения: копирование, меню, печать, PrintScreen; при уходе из окна вопросы скрываются и событие записывается
+['copy','cut','paste','contextmenu','dragstart'].forEach(e=>addEventListener(e,x=>x.target.tagName=='TEXTAREA'||x.preventDefault()));
+addEventListener('keydown',e=>{if(e.key=='PrintScreen'){navigator.clipboard?.writeText('').catch(()=>0);away()}if((e.ctrlKey||e.metaKey)&&/^[cxpsua]$/i.test(e.key))e.preventDefault()});
+const away=()=>{S.b++;document.body.classList.add('away')};
+addEventListener('blur',away);document.addEventListener('visibilitychange',()=>document.hidden&&away());addEventListener('focus',()=>document.body.classList.remove('away'));
+login();
+</script></body></html>
